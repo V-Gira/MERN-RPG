@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
-import {create} from './api-course.js'
+import {create} from './api-game.js'
 import {Link, Redirect} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function NewCourse() {
+export default function NewGame() {
   const classes = useStyles()
   const [values, setValues] = useState({
       name: '',
@@ -63,16 +63,16 @@ export default function NewCourse() {
     setValues({...values, [name]: value })
   }
   const clickSubmit = () => {
-    let courseData = new FormData()
-    values.name && courseData.append('name', values.name)
-    values.description && courseData.append('description', values.description)
-    values.image && courseData.append('image', values.image)
-    values.category && courseData.append('category', values.category)
+    let gameData = new FormData()
+    values.name && gameData.append('name', values.name)
+    values.description && gameData.append('description', values.description)
+    values.image && gameData.append('image', values.image)
+    values.category && gameData.append('category', values.category)
     create({
       userId: jwt.user._id
     }, {
       t: jwt.token
-    }, courseData).then((data) => {
+    }, gameData).then((data) => {
       if (data.error) {
         setValues({...values, error: data.error})
       } else {
@@ -82,13 +82,13 @@ export default function NewCourse() {
   }
 
     if (values.redirect) {
-      return (<Redirect to={'/teach/courses'}/>)
+      return (<Redirect to={'/teach/games'}/>)
     }
     return (<div>
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h6" className={classes.title}>
-            New Course
+            New Game
           </Typography>
           <br/>
           <input accept="image/*" onChange={handleChange('image')} className={classes.input} id="icon-button-file" type="file" />
@@ -118,7 +118,7 @@ export default function NewCourse() {
         </CardContent>
         <CardActions>
           <Button color="primary" variant="contained" onClick={clickSubmit} className={classes.submit}>Submit</Button>
-          <Link to='/teach/courses' className={classes.submit}><Button variant="contained">Cancel</Button></Link>
+          <Link to='/teach/games' className={classes.submit}><Button variant="contained">Cancel</Button></Link>
         </CardActions>
       </Card>
     </div>)

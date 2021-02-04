@@ -1,15 +1,15 @@
 import mongoose from 'mongoose'
 
 const EnrollmentSchema = new mongoose.Schema({
-  course: {type: mongoose.Schema.ObjectId, ref: 'Course'},
+  game: {type: mongoose.Schema.ObjectId, ref: 'Game'},
   updated: Date,
   enrolled: {
     type: Date,
     default: Date.now
   },
   student: {type: mongoose.Schema.ObjectId, ref: 'User'},
-  lessonStatus: [{
-      lesson: {type: mongoose.Schema.ObjectId, ref: 'Lesson'}, 
+  missionStatus: [{
+      mission: {type: mongoose.Schema.ObjectId, ref: 'Mission'}, 
       complete: Boolean}],
   completed: Date
 })

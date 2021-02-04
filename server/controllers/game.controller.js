@@ -1,4 +1,4 @@
-import Course from '../models/course.model'
+import Game from '../models/game.model'
 import extend from 'lodash/extend'
 import fs from 'fs'
 import errorHandler from './../helpers/dbErrorHandler'
@@ -14,14 +14,14 @@ const create = (req, res) => {
         error: "Image could not be uploaded"
       })
     }
-    let course = new Course(fields)
-    course.instructor= req.profile
+    let game = new Game(fields)
+    game.instructor= req.profile
     if(files.image){
-      course.image.data = fs.readFileSync(files.image.path)
-      course.image.contentType = files.image.type
+      game.image.data = fs.readFileSync(files.image.path)
+      game.image.contentType = files.image.type
     }
     try {
-      let result = await course.save()
+      let result = await game.save()
       res.json(result)
     }catch (err){
       return res.status(400).json({
@@ -32,33 +32,33 @@ const create = (req, res) => {
 }
 
 /**
- * Load course and append to req.
+ * Load game and append to req.
  */
-const courseByID = async (req, res, next, id) => {
+const gameByID = async (req, res, next, id) => {
   try {
-    let course = await Course.findById(id).populate('instructor', '_id name')
-    if (!course)
+    let game = await Game.findById(id).populate('instructor', '_id name')
+    if (!game)
       return res.status('400').json({
-        error: "Course not found"
+        error: "Game not found"
       })
-    req.course = course
+    req.game = game
     next()
   } catch (err) {
     return res.status('400').json({
-      error: "Could not retrieve course"
+      error: "Could not retrieve game"
     })
   }
 }
 
 const read = (req, res) => {
-  req.course.image = undefined
-  return res.json(req.course)
+  req.game.image = undefined
+  return res.json(req.game)
 }
 
 const list = async (req, res) => {
   try {
-    let courses = await Course.find().select('name email updated created')
-    res.json(courses)
+    let games = await Game.find().select('name email updated created')
+    res.json(games)
   } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
@@ -75,19 +75,19 @@ const update = async (req, res) => {
         error: "Photo could not be uploaded"
       })
     }
-    let course = req.course
-    course = extend(course, fields)
-    if(fields.lessons){
-      course.lessons = JSON.parse(fields.lessons)
+    let game = req.game
+    game = extend(game, fields)
+    if(fields.missions){
+      game.missions = JSON.parse(fields.missions)
     }
-    course.updated = Date.now()
+    game.updated = Date.now()
     if(files.image){
-      course.image.data = fs.readFileSync(files.image.path)
-      course.image.contentType = files.image.type
+      game.image.data = fs.readFileSync(files.image.path)
+      game.image.contentType = files.image.type
     }
     try {
-      await course.save()
-      res.json(course)
+      await game.save()
+      res.json(game)
     } catch (err) {
       return res.status(400).json({
         error: errorHandler.getErrorMessage(err)
@@ -96,10 +96,10 @@ const update = async (req, res) => {
   })
 }
 
-const newLesson = async (req, res) => {
+const newMission = async (req, res) => {
   try {
-    let lesson = req.body.lesson
-    let result = await Course.findByIdAndUpdate(req.course._id, {$push: {lessons: lesson}, updated: Date.now()}, {new: true})
+    let mission = req.body.mission
+    let result = await Game.findByIdAndUpdate(req.game._id, {$push: {missions: mission}, updated: Date.now()}, {new: true})
                             .populate('instructor', '_id name')
                             .exec()
     res.json(result)
@@ -112,9 +112,9 @@ const newLesson = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    let course = req.course
-    let deleteCourse = await course.remove()
-    res.json(deleteCourse)
+    let game = req.game
+    let deleteGame = await game.remove()
+    res.json(deleteGame)
   } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
@@ -123,7 +123,7 @@ const remove = async (req, res) => {
 }
 
 const isInstructor = (req, res, next) => {
-    const isInstructor = req.course && req.auth && req.course.instructor._id == req.auth._id
+    const isInstructor = req.game && req.auth && req.game.instructor._id == req.auth._id
     if(!isInstructor){
       return res.status('403').json({
         error: "User is not authorized"
@@ -133,31 +133,31 @@ const isInstructor = (req, res, next) => {
 }
 
 const listByInstructor = (req, res) => {
-  Course.find({instructor: req.profile._id}, (err, courses) => {
+  Game.find({instructor: req.profile._id}, (err, games) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler.getErrorMessage(err)
       })
     }
-    res.json(courses)
+    res.json(games)
   }).populate('instructor', '_id name')
 }
 
 const listPublished = (req, res) => {
-  Course.find({published: true}, (err, courses) => {
+  Game.find({published: true}, (err, games) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler.getErrorMessage(err)
       })
     }
-    res.json(courses)
+    res.json(games)
   }).populate('instructor', '_id name')
 }
 
 const photo = (req, res, next) => {
-  if(req.course.image.data){
-    res.set("Content-Type", req.course.image.contentType)
-    return res.send(req.course.image.data)
+  if(req.game.image.data){
+    res.set("Content-Type", req.game.image.contentType)
+    return res.send(req.game.image.data)
   }
   next()
 }
@@ -168,7 +168,7 @@ const defaultPhoto = (req, res) => {
 
 export default {
   create,
-  courseByID,
+  gameByID,
   read,
   list,
   remove,
@@ -177,6 +177,6 @@ export default {
   listByInstructor,
   photo,
   defaultPhoto,
-  newLesson,
+  newMission,
   listPublished
 }

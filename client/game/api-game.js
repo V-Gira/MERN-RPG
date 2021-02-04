@@ -1,12 +1,12 @@
-const create = async (params, credentials, course) => {
+const create = async (params, credentials, game) => {
     try {
-        let response = await fetch('/api/courses/by/'+ params.userId, {
+        let response = await fetch('/api/games/by/'+ params.userId, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + credentials.t
           },
-          body: course
+          body: game
         })
           return response.json()
         } catch(err) { 
@@ -16,7 +16,7 @@ const create = async (params, credentials, course) => {
   
   const list = async (signal) => {
     try {
-      let response = await fetch('/api/courses/', {
+      let response = await fetch('/api/games/', {
         method: 'GET',
         signal: signal,
       })
@@ -28,7 +28,7 @@ const create = async (params, credentials, course) => {
   
   const read = async (params, signal) => {
     try {
-      let response = await fetch('/api/courses/' + params.courseId, {
+      let response = await fetch('/api/games/' + params.gameId, {
         method: 'GET',
         signal: signal,
         headers: {
@@ -42,15 +42,15 @@ const create = async (params, credentials, course) => {
     }
   }
   
-  const update = async (params, credentials, course) => {
+  const update = async (params, credentials, game) => {
     try {
-      let response = await fetch('/api/courses/' + params.courseId, {
+      let response = await fetch('/api/games/' + params.gameId, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer ' + credentials.t
         },
-        body: course
+        body: game
       })
       return await response.json()
     } catch(err) {
@@ -60,7 +60,7 @@ const create = async (params, credentials, course) => {
   
   const remove = async (params, credentials) => {
     try {
-      let response = await fetch('/api/courses/' + params.courseId, {
+      let response = await fetch('/api/games/' + params.gameId, {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
@@ -76,7 +76,7 @@ const create = async (params, credentials, course) => {
 
   const listByInstructor = async (params, credentials, signal) => {
     try {
-      let response = await fetch('/api/courses/by/'+params.userId, {
+      let response = await fetch('/api/games/by/'+params.userId, {
         method: 'GET',
         signal: signal,
         headers: {
@@ -90,16 +90,16 @@ const create = async (params, credentials, course) => {
     }
   }
 
-  const newLesson = async (params, credentials, lesson) => {
+  const newMission = async (params, credentials, mission) => {
     try {
-      let response = await fetch('/api/courses/'+params.courseId+'/lesson/new', {
+      let response = await fetch('/api/games/'+params.gameId+'/mission/new', {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + credentials.t
         },
-        body: JSON.stringify({lesson:lesson})
+        body: JSON.stringify({mission:mission})
       })
       return response.json()
     } catch(err){
@@ -108,7 +108,7 @@ const create = async (params, credentials, course) => {
   }
   const listPublished = async (signal) => {
     try {
-      let response = await fetch('/api/courses/published', {
+      let response = await fetch('/api/games/published', {
         method: 'GET',
         signal: signal,
         headers: {
@@ -128,6 +128,6 @@ const create = async (params, credentials, course) => {
     update,
     remove,
     listByInstructor,
-    newLesson,
+    newMission,
     listPublished
   }
