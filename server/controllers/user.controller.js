@@ -82,11 +82,11 @@ const remove = async (req, res) => {
   }
 }
 
-const isEducator = (req, res, next) => {
-  const isEducator = req.profile && req.profile.educator
-  if (!isEducator) {
+const isGm = (req, res, next) => {
+  const isGm = req.profile && req.profile.gm
+  if (!isGm) {
     return res.status('403').json({
-      error: "User is not an educator"
+      error: "User is not an gm"
     })
   }
   next()
@@ -99,5 +99,5 @@ export default {
   list,
   remove,
   update,
-  isEducator
+  isGm
 }

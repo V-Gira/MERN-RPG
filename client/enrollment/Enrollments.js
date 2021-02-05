@@ -53,13 +53,13 @@ export default function Enrollments(props){
     return (
       <div>
         <GridList cellHeight={120} className={classes.gridList} cols={4}>
-          {props.enrollments.map((course, i) => (
+          {props.enrollments.map((game, i) => (
             <GridListTile key={i} className={classes.tile}>
-              <Link to={"/learn/"+course._id}><img className={classes.image} src={'/api/courses/photo/'+course.course._id} alt={course.course.name} /></Link>
+              <Link to={"/learn/"+game._id}><img className={classes.image} src={'/api/games/photo/'+game.game._id} alt={game.game.name} /></Link>
               <GridListTileBar className={classes.tileBar}
-                title={<Link to={"/learn/"+course._id} className={classes.tileTitle}>{course.course.name}</Link>}
+                title={<Link to={"/learn/"+game._id} className={classes.tileTitle}>{game.game.name}</Link>}
                 actionIcon={<div className={classes.action}>
-                 {course.completed ? (<CompletedIcon color="secondary"/>)
+                 {game.completed ? (<CompletedIcon color="secondary"/>)
                  : (<InProgressIcon className={classes.progress} />)
                 }</div>}
               />

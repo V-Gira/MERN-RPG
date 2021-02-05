@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
-import {listPublished} from './../course/api-course'
+import {listPublished} from './../game/api-game'
 import {listEnrolled, listCompleted} from './../enrollment/api-enrollment'
 import Typography from '@material-ui/core/Typography'
 import auth from './../auth/auth-helper'
-import Courses from './../course/Courses'
+import Games from './../game/Games'
 import Enrollments from '../enrollment/Enrollments'
 
 
@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
 export default function Home(){
   const classes = useStyles()
   const jwt = auth.isAuthenticated()
-  const [courses, setCourses] = useState([])
+  const [games, setGames] = useState([])
   const [enrolled, setEnrolled] = useState([])
   useEffect(() => {
     const abortController = new AbortController()
@@ -91,7 +91,7 @@ export default function Home(){
       if (data.error) {
         console.log(data.error)
       } else {
-        setCourses(data)
+        setGames(data)
       }
     })
     return function cleanup(){
@@ -102,19 +102,19 @@ export default function Home(){
       {auth.isAuthenticated().user && (
       <Card className={`${classes.card} ${classes.enrolledCard}`}>
         <Typography variant="h6" component="h2" className={classes.enrolledTitle}>
-            Courses you are enrolled in
+            Games you are enrolled in
         </Typography>
         {enrolled.length != 0 ? (<Enrollments enrollments={enrolled}/>)
-                             : (<Typography variant="body1" className={classes.noTitle}>No courses.</Typography>)
+                             : (<Typography variant="body1" className={classes.noTitle}>No games.</Typography>)
         }
       </Card>
       )}
       <Card className={classes.card}>
         <Typography variant="h5" component="h2">
-            All Courses
+            All Games
         </Typography>
-        {(courses.length != 0 && courses.length != enrolled.length) ? (<Courses courses={courses} common={enrolled}/>) 
-                             : (<Typography variant="body1" className={classes.noTitle}>No new courses.</Typography>)
+        {(games.length != 0 && games.length != enrolled.length) ? (<Games games={games} common={enrolled}/>) 
+                             : (<Typography variant="body1" className={classes.noTitle}>No new games.</Typography>)
         }
       </Card>
     </div>

@@ -44,24 +44,24 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Courses(props){
+export default function Games(props){
   const classes = useStyles()
-  const findCommon = (course) => {
-    return !props.common.find((enrolled)=>{return enrolled.course._id == course._id})
+  const findCommon = (game) => {
+    return !props.common.find((enrolled)=>{return enrolled.game._id == game._id})
   }
     return (
         <GridList cellHeight={220} className={classes.gridList} cols={2}>
-          {props.courses.map((course, i) => {
+          {props.games.map((game, i) => {
             return (
-            findCommon(course) &&
+            findCommon(game) &&
               <GridListTile className={classes.tile} key={i} style={{padding:0}}>
-                <Link to={"/course/"+course._id}><img className={classes.image} src={'/api/courses/photo/'+course._id} alt={course.name} /></Link>
+                <Link to={"/game/"+game._id}><img className={classes.image} src={'/api/games/photo/'+game._id} alt={game.name} /></Link>
                 <GridListTileBar className={classes.tileBar}
-                  title={<Link to={"/course/"+course._id} className={classes.tileTitle}>{course.name}</Link>}
-                  subtitle={<span>{course.category}</span>}
+                  title={<Link to={"/game/"+game._id} className={classes.tileTitle}>{game.name}</Link>}
+                  subtitle={<span>{game.category}</span>}
                   actionIcon={
                     <div className={classes.action}>
-                    {auth.isAuthenticated() ? <Enroll courseId={course._id}/> : <Link to="/signin">Sign in to Enroll</Link>}
+                    {auth.isAuthenticated() ? <Enroll gameId={game._id}/> : <Link to="/signin">Sign in to Enroll</Link>}
                     </div>
                   }
                 />
@@ -72,6 +72,6 @@ export default function Courses(props){
     )
 }
 
-Courses.propTypes = {
-  courses: PropTypes.array.isRequired
+Games.propTypes = {
+  games: PropTypes.array.isRequired
 }

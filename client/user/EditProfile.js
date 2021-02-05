@@ -48,7 +48,7 @@ export default function EditProfile({ match }) {
     open: false,
     error: '',
     redirectToProfile: false,
-    educator: false
+    gm: false
   })
   const jwt = auth.isAuthenticated()
 
@@ -62,7 +62,7 @@ export default function EditProfile({ match }) {
       if (data && data.error) {
         setValues({...values, error: data.error})
       } else {
-        setValues({...values, name: data.name, email: data.email, educator: data.educator})
+        setValues({...values, name: data.name, email: data.email, gm: data.gm})
       }
     })
     return function cleanup(){
@@ -76,7 +76,7 @@ export default function EditProfile({ match }) {
       name: values.name || undefined,
       email: values.email || undefined,
       password: values.password || undefined,
-      educator: values.educator 
+      gm: values.gm 
     }
     update({
       userId: match.params.userId
@@ -96,7 +96,7 @@ export default function EditProfile({ match }) {
     setValues({...values, [name]: event.target.value})
   }
   const handleCheck = (event, checked) => {
-    setValues({...values, educator: checked})
+    setValues({...values, gm: checked})
   }
 
     if (values.redirectToProfile) {
@@ -113,7 +113,7 @@ export default function EditProfile({ match }) {
           <TextField id="password" type="password" label="Password" className={classes.textField} value={values.password} onChange={handleChange('password')} margin="normal"/><br/>
           <br/>
           <Typography variant="subtitle1" className={classes.subheading}>
-            I am an Educator
+            I am a Game Master
           </Typography>
           <FormControlLabel
             control={
@@ -121,10 +121,10 @@ export default function EditProfile({ match }) {
                                 checked: classes.checked,
                                 bar: classes.bar,
                               }}
-                      checked={values.educator}
+                      checked={values.gm}
                       onChange={handleCheck}
               />}
-            label={values.educator? 'Yes' : 'No'}
+            label={values.gm? 'Yes' : 'No'}
           />
           <br/> {
             values.error && (<Typography component="p" color="error">

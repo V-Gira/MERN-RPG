@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import auth from './../auth/auth-helper'
-import {listByInstructor} from './api-course.js'
+import {listByInstructor} from './api-game.js'
 import {Redirect, Link} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
@@ -43,9 +43,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function MyCourses(){
+export default function MyGames(){
   const classes = useStyles()
-  const [courses, setCourses] = useState([])
+  const [games, setGames] = useState([])
   const [redirectToSignin, setRedirectToSignin] = useState(false)
   const jwt = auth.isAuthenticated()
 
@@ -58,7 +58,7 @@ export default function MyCourses(){
       if (data.error) {
         setRedirectToSignin(true)
       } else {
-        setCourses(data)
+        setGames(data)
       }
     })
     return function cleanup(){
@@ -73,23 +73,23 @@ export default function MyCourses(){
     <div>
       <Paper className={classes.root} elevation={4}>
         <Typography type="title" className={classes.title}>
-          Your Courses
+          Your Games
           <span className={classes.addButton}>
-            <Link to="/teach/course/new">
+            <Link to="/teach/game/new">
               <Button color="primary" variant="contained">
-                <Icon className={classes.leftIcon}>add_box</Icon>  New Course
+                <Icon className={classes.leftIcon}>add_box</Icon>  New Game
               </Button>
             </Link>
           </span>
         </Typography>
         <List dense>
-        {courses.map((course, i) => {
-            return   <Link to={"/teach/course/"+course._id} key={i}>
+        {games.map((game, i) => {
+            return   <Link to={"/teach/game/"+game._id} key={i}>
               <ListItem button>
                 <ListItemAvatar>
-                  <Avatar src={'/api/courses/photo/'+course._id+"?" + new Date().getTime()} className={classes.avatar}/>
+                  <Avatar src={'/api/games/photo/'+game._id+"?" + new Date().getTime()} className={classes.avatar}/>
                 </ListItemAvatar>
-                <ListItemText primary={course.name} secondary={course.description} className={classes.listText}/>
+                <ListItemText primary={game.name} secondary={game.description} className={classes.listText}/>
               </ListItem>
               <Divider/>
             </Link>})}

@@ -14,13 +14,13 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
-import {read, update} from './api-course.js'
+import {read, update} from './api-game.js'
 import {enrollmentStats} from './../enrollment/api-enrollment'
 import {Link, Redirect} from 'react-router-dom'
 import auth from './../auth/auth-helper'
-import DeleteCourse from './DeleteCourse'
+import DeleteGame from './DeleteGame'
 import Divider from '@material-ui/core/Divider'
-import NewLesson from './NewLesson'
+import NewMission from './NewMission'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -90,10 +90,10 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Course ({match}) {
+export default function Game ({match}) {
   const classes = useStyles()
   const [stats, setStats] = useState({})
-  const [course, setCourse] = useState({instructor:{}})
+  const [game, setGame] = useState({instructor:{}})
   const [values, setValues] = useState({
       redirect: false,
       error: ''
@@ -104,22 +104,22 @@ export default function Course ({match}) {
       const abortController = new AbortController()
       const signal = abortController.signal
   
-      read({courseId: match.params.courseId}, signal).then((data) => {
+      read({gameId: match.params.gameId}, signal).then((data) => {
         if (data.error) {
           setValues({...values, error: data.error})
         } else {
-          setCourse(data)
+          setGame(data)
         }
       })
     return function cleanup(){
       abortController.abort()
     }
-  }, [match.params.courseId])
+  }, [match.params.gameId])
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
 
-    enrollmentStats({courseId: match.params.courseId}, {t:jwt.token}, signal).then((data) => {
+    enrollmentStats({gameId: match.params.gameId}, {t:jwt.token}, signal).then((data) => {
       if (data.error) {
         setValues({...values, error: data.error})
       } else {
@@ -129,30 +129,30 @@ export default function Course ({match}) {
     return function cleanup(){
       abortController.abort()
     }
-  }, [match.params.courseId])
-  const removeCourse = (course) => {
+  }, [match.params.gameId])
+  const removeGame = (game) => {
     setValues({...values, redirect:true})
   }
-  const addLesson = (course) => {
-    setCourse(course)
+  const addMission = (game) => {
+    setGame(game)
   }
   const clickPublish = () => {
-    if(course.lessons.length > 0){    
+    if(game.missions.length > 0){    
       setOpen(true)
     }
   }
   const publish = () => {
-    let courseData = new FormData()
-      courseData.append('published', true)
+    let gameData = new FormData()
+      gameData.append('published', true)
       update({
-          courseId: match.params.courseId
+          gameId: match.params.gameId
         }, {
           t: jwt.token
-        }, courseData).then((data) => {
+        }, gameData).then((data) => {
           if (data && data.error) {
             setValues({...values, error: data.error})
           } else {
-            setCourse({...course, published: true})
+            setGame({...game, published: true})
             setOpen(false)
           }
       })
@@ -161,38 +161,38 @@ export default function Course ({match}) {
     setOpen(false)
   }
   if (values.redirect) {
-    return (<Redirect to={'/teach/courses'}/>)
+    return (<Redirect to={'/teach/games'}/>)
   }
-    const imageUrl = course._id
-          ? `/api/courses/photo/${course._id}?${new Date().getTime()}`
-          : '/api/courses/defaultphoto'
+    const imageUrl = game._id
+          ? `/api/games/photo/${game._id}?${new Date().getTime()}`
+          : '/api/games/defaultphoto'
     return (
         <div className={classes.root}>
               <Card className={classes.card}>
                 <CardHeader
-                  title={course.name}
+                  title={game.name}
                   subheader={<div>
-                        <Link to={"/user/"+course.instructor._id} className={classes.sub}>By {course.instructor.name}</Link>
-                        <span className={classes.category}>{course.category}</span>
+                        <Link to={"/user/"+game.instructor._id} className={classes.sub}>By {game.instructor.name}</Link>
+                        <span className={classes.category}>{game.category}</span>
                       </div>
                     }
                   action={<>
-             {auth.isAuthenticated().user && auth.isAuthenticated().user._id == course.instructor._id &&
+             {auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.instructor._id &&
                 (<span className={classes.action}>
-                  <Link to={"/teach/course/edit/" + course._id}>
+                  <Link to={"/teach/game/edit/" + game._id}>
                     <IconButton aria-label="Edit" color="secondary">
                       <Edit/>
                     </IconButton>
                   </Link>
-                {!course.published ? (<>
-                  <Button color="secondary" variant="outlined" onClick={clickPublish}>{course.lessons.length == 0 ? "Add atleast 1 lesson to publish" : "Publish"}</Button>
-                  <DeleteCourse course={course} onRemove={removeCourse}/>
+                {!game.published ? (<>
+                  <Button color="secondary" variant="outlined" onClick={clickPublish}>{game.missions.length == 0 ? "Add atleast 1 mission to publish" : "Publish"}</Button>
+                  <DeleteGame game={game} onRemove={removeGame}/>
                 </>) : (
                   <Button color="primary" variant="outlined">Published</Button>
                 )}
                 </span>)
              }
-                {course.published && (<div>
+                {game.published && (<div>
                   <span className={classes.statSpan}><PeopleIcon /> {stats.totalEnrolled} enrolled </span>
                   <span className={classes.statSpan}><CompletedIcon/> {stats.totalCompleted} completed </span>
                   </div>
@@ -205,14 +205,14 @@ export default function Course ({match}) {
                   <CardMedia
                     className={classes.media}
                     image={imageUrl}
-                    title={course.name}
+                    title={game.name}
                   />
                   <div className={classes.details}>
                     <Typography variant="body1" className={classes.subheading}>
-                        {course.description}<br/>
+                        {game.description}<br/>
                     </Typography>
                     
-              {course.published && <div className={classes.enroll}><Enroll courseId={course._id}/></div>} 
+              {game.published && <div className={classes.enroll}><Enroll gameId={game._id}/></div>} 
                     
                     
                   </div>
@@ -220,18 +220,18 @@ export default function Course ({match}) {
                 <Divider/>
                 <div>
                 <CardHeader
-                  title={<Typography variant="h6" className={classes.subheading}>Lessons</Typography>
+                  title={<Typography variant="h6" className={classes.subheading}>Missions</Typography>
                 }
-                  subheader={<Typography variant="body1" className={classes.subheading}>{course.lessons && course.lessons.length} lessons</Typography>}
+                  subheader={<Typography variant="body1" className={classes.subheading}>{game.missions && game.missions.length} missions</Typography>}
                   action={
-             auth.isAuthenticated().user && auth.isAuthenticated().user._id == course.instructor._id && !course.published &&
+             auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.instructor._id && !game.published &&
                 (<span className={classes.action}>
-                  <NewLesson courseId={course._id} addLesson={addLesson}/>
+                  <NewMission gameId={game._id} addMission={addMission}/>
                 </span>)
             }
                 />
                 <List>
-                {course.lessons && course.lessons.map((lesson, index) => {
+                {game.missions && game.missions.map((mission, index) => {
                     return(<span key={index}>
                     <ListItem>
                     <ListItemAvatar>
@@ -240,7 +240,7 @@ export default function Course ({match}) {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        primary={lesson.title}
+                        primary={mission.title}
                     />
                     </ListItem>
                     <Divider variant="inset" component="li" />
@@ -251,9 +251,9 @@ export default function Course ({match}) {
                 </div>
               </Card>
               <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
+                <DialogTitle id="form-dialog-title">Publish Game</DialogTitle>
                 <DialogContent>
-                  <Typography variant="body1">Publishing your course will make it live to students for enrollment. </Typography><Typography variant="body1">Make sure all lessons are added and ready for publishing.</Typography></DialogContent>
+                  <Typography variant="body1">Publishing your game will make it live to students for enrollment. </Typography><Typography variant="body1">Make sure all missions are added and ready for publishing.</Typography></DialogContent>
                 <DialogActions>
                 <Button onClick={handleClose} color="primary" variant="contained">
                   Cancel
