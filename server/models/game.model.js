@@ -29,7 +29,7 @@ const GameSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  instructor: {type: mongoose.Schema.ObjectId, ref: 'User'},
+  gameMaster: {type: mongoose.Schema.ObjectId, ref: 'User'},
   published: {
     type: Boolean,
     default: false

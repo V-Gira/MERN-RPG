@@ -9,7 +9,7 @@ import Template from './../template'
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
 import gameRoutes from './routes/game.routes'
-import enrollmentRoutes from './routes/enrollment.routes'
+import partyRoutes from './routes/party.routes'
 
 // modules for server side rendering
 import React from 'react'
@@ -46,7 +46,7 @@ app.use('/dist', express.static(path.join(CURRENT_WORKING_DIR, 'dist')))
 app.use('/', userRoutes)
 app.use('/', authRoutes)
 app.use('/', gameRoutes)
-app.use('/', enrollmentRoutes)
+app.use('/', partyRoutes)
 
 app.get('*', (req, res) => {
   const sheets = new ServerStyleSheets()

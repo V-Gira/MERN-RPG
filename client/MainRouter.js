@@ -13,7 +13,7 @@ import NewGame from './game/NewGame'
 import Game from './game/Game'
 import EditGame from './game/EditGame'
 import MyGames from './game/MyGames'
-import Enrollment from './enrollment/Enrollment'
+import Party from './party/Party'
 
 const MainRouter = () => {
     return (<div>
@@ -31,7 +31,7 @@ const MainRouter = () => {
         <PrivateRoute path="/teach/game/new" component={NewGame}/>
         <PrivateRoute path="/teach/game/edit/:gameId" component={EditGame}/>
         <PrivateRoute path="/teach/game/:gameId" component={Game}/>
-        <PrivateRoute path="/learn/:enrollmentId" component={Enrollment}/>
+        <PrivateRoute path="/learn/:partyId" component={Party}/>
 
       </Switch>
     </div>)

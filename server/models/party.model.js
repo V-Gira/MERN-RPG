@@ -1,17 +1,17 @@
 import mongoose from 'mongoose'
 
-const EnrollmentSchema = new mongoose.Schema({
+const PartySchema = new mongoose.Schema({
   game: {type: mongoose.Schema.ObjectId, ref: 'Game'},
   updated: Date,
-  enrolled: {
+  joined: {
     type: Date,
     default: Date.now
   },
-  student: {type: mongoose.Schema.ObjectId, ref: 'User'},
+  player: {type: mongoose.Schema.ObjectId, ref: 'User'},
   missionStatus: [{
       mission: {type: mongoose.Schema.ObjectId, ref: 'Mission'}, 
       complete: Boolean}],
   completed: Date
 })
 
-export default mongoose.model('Enrollment', EnrollmentSchema)
+export default mongoose.model('Party', PartySchema)

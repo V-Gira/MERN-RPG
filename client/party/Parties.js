@@ -48,12 +48,12 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Enrollments(props){
+export default function Parties(props){
   const classes = useStyles()
     return (
       <div>
         <GridList cellHeight={120} className={classes.gridList} cols={4}>
-          {props.enrollments.map((game, i) => (
+          {props.parties.map((game, i) => (
             <GridListTile key={i} className={classes.tile}>
               <Link to={"/learn/"+game._id}><img className={classes.image} src={'/api/games/photo/'+game.game._id} alt={game.game.name} /></Link>
               <GridListTileBar className={classes.tileBar}

@@ -15,7 +15,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import {read, update} from './api-game.js'
-import {enrollmentStats} from './../enrollment/api-enrollment'
+import {partyStats} from './../party/api-party'
 import {Link, Redirect} from 'react-router-dom'
 import auth from './../auth/auth-helper'
 import DeleteGame from './DeleteGame'
@@ -25,7 +25,7 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Enroll from './../enrollment/Enroll'
+import Join from './../party/Join'
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({
@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme => ({
       color: '#b6ab9a'
     }
   },
-  enroll:{
+  join:{
     float: 'right'
   }
 }))
@@ -93,7 +93,7 @@ const useStyles = makeStyles(theme => ({
 export default function Game ({match}) {
   const classes = useStyles()
   const [stats, setStats] = useState({})
-  const [game, setGame] = useState({instructor:{}})
+  const [game, setGame] = useState({gameMaster:{}})
   const [values, setValues] = useState({
       redirect: false,
       error: ''
@@ -119,7 +119,7 @@ export default function Game ({match}) {
     const abortController = new AbortController()
     const signal = abortController.signal
 
-    enrollmentStats({gameId: match.params.gameId}, {t:jwt.token}, signal).then((data) => {
+    partyStats({gameId: match.params.gameId}, {t:jwt.token}, signal).then((data) => {
       if (data.error) {
         setValues({...values, error: data.error})
       } else {
@@ -172,12 +172,12 @@ export default function Game ({match}) {
                 <CardHeader
                   title={game.name}
                   subheader={<div>
-                        <Link to={"/user/"+game.instructor._id} className={classes.sub}>By {game.instructor.name}</Link>
+                        <Link to={"/user/"+game.gameMaster._id} className={classes.sub}>By {game.gameMaster.name}</Link>
                         <span className={classes.category}>{game.category}</span>
                       </div>
                     }
                   action={<>
-             {auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.instructor._id &&
+             {auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.gameMaster._id &&
                 (<span className={classes.action}>
                   <Link to={"/teach/game/edit/" + game._id}>
                     <IconButton aria-label="Edit" color="secondary">
@@ -193,7 +193,7 @@ export default function Game ({match}) {
                 </span>)
              }
                 {game.published && (<div>
-                  <span className={classes.statSpan}><PeopleIcon /> {stats.totalEnrolled} enrolled </span>
+                  <span className={classes.statSpan}><PeopleIcon /> {stats.totalJoined} joined </span>
                   <span className={classes.statSpan}><CompletedIcon/> {stats.totalCompleted} completed </span>
                   </div>
                   )}
@@ -212,7 +212,7 @@ export default function Game ({match}) {
                         {game.description}<br/>
                     </Typography>
                     
-              {game.published && <div className={classes.enroll}><Enroll gameId={game._id}/></div>} 
+              {game.published && <div className={classes.join}><Join gameId={game._id}/></div>} 
                     
                     
                   </div>
@@ -224,7 +224,7 @@ export default function Game ({match}) {
                 }
                   subheader={<Typography variant="body1" className={classes.subheading}>{game.missions && game.missions.length} missions</Typography>}
                   action={
-             auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.instructor._id && !game.published &&
+             auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.gameMaster._id && !game.published &&
                 (<span className={classes.action}>
                   <NewMission gameId={game._id} addMission={addMission}/>
                 </span>)
@@ -253,7 +253,7 @@ export default function Game ({match}) {
               <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Publish Game</DialogTitle>
                 <DialogContent>
-                  <Typography variant="body1">Publishing your game will make it live to students for enrollment. </Typography><Typography variant="body1">Make sure all missions are added and ready for publishing.</Typography></DialogContent>
+                  <Typography variant="body1">Publishing your game will make it live to players for party. </Typography><Typography variant="body1">Make sure all missions are added and ready for publishing.</Typography></DialogContent>
                 <DialogActions>
                 <Button onClick={handleClose} color="primary" variant="contained">
                   Cancel
