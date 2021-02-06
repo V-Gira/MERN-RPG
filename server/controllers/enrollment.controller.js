@@ -4,7 +4,7 @@ import errorHandler from './../helpers/dbErrorHandler'
 const create = async (req, res) => {
   let newEnrollment = {
     game: req.game,
-    student: req.auth,
+    player: req.auth,
   }
   newEnrollment.missionStatus = req.game.missions.map((mission)=>{
     return {mission: mission, complete:false}
@@ -27,7 +27,7 @@ const enrollmentByID = async (req, res, next, id) => {
   try {
     let enrollment = await Enrollment.findById(id)
                                     .populate({path: 'game', populate:{ path: 'instructor'}})
-                                    .populate('student', '_id name')
+                                    .populate('player', '_id name')
     if (!enrollment)
       return res.status('400').json({
         error: "Enrollment not found"
@@ -74,9 +74,9 @@ const remove = async (req, res) => {
   }
 }
 
-const isStudent = (req, res, next) => {
-  const isStudent = req.auth && req.auth._id == req.enrollment.student._id
-  if (!isStudent) {
+const isPlayer = (req, res, next) => {
+  const isPlayer = req.auth && req.auth._id == req.enrollment.player._id
+  if (!isPlayer) {
     return res.status('403').json({
       error: "User is not enrolled"
     })
@@ -86,7 +86,7 @@ const isStudent = (req, res, next) => {
 
 const listEnrolled = async (req, res) => {
   try {
-    let enrollments = await Enrollment.find({student: req.auth._id}).sort({'completed': 1}).populate('game', '_id name category')
+    let enrollments = await Enrollment.find({player: req.auth._id}).sort({'completed': 1}).populate('game', '_id name category')
     res.json(enrollments)
   } catch (err) {
     console.log(err)
@@ -98,7 +98,7 @@ const listEnrolled = async (req, res) => {
 
 const findEnrollment = async (req, res, next) => {
   try {
-    let enrollments = await Enrollment.find({game:req.game._id, student: req.auth._id})
+    let enrollments = await Enrollment.find({game:req.game._id, player: req.auth._id})
     if(enrollments.length == 0){
       next()
     }else{
@@ -130,7 +130,7 @@ export default {
   read,
   remove,
   complete,
-  isStudent,
+  isPlayer,
   listEnrolled,
   findEnrollment,
   enrollmentStats

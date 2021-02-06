@@ -7,7 +7,7 @@ const EnrollmentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  student: {type: mongoose.Schema.ObjectId, ref: 'User'},
+  player: {type: mongoose.Schema.ObjectId, ref: 'User'},
   missionStatus: [{
       mission: {type: mongoose.Schema.ObjectId, ref: 'Mission'}, 
       complete: Boolean}],

@@ -15,11 +15,11 @@ router.route('/api/enrollment/stats/:gameId')
   .get(enrollmentCtrl.enrollmentStats)
 
 router.route('/api/enrollment/complete/:enrollmentId')
-  .put(authCtrl.requireSignin, enrollmentCtrl.isStudent, enrollmentCtrl.complete) 
+  .put(authCtrl.requireSignin, enrollmentCtrl.isPlayer, enrollmentCtrl.complete) 
 
 router.route('/api/enrollment/:enrollmentId')
-  .get(authCtrl.requireSignin, enrollmentCtrl.isStudent, enrollmentCtrl.read)
-  .delete(authCtrl.requireSignin, enrollmentCtrl.isStudent, enrollmentCtrl.remove)
+  .get(authCtrl.requireSignin, enrollmentCtrl.isPlayer, enrollmentCtrl.read)
+  .delete(authCtrl.requireSignin, enrollmentCtrl.isPlayer, enrollmentCtrl.remove)
 
 router.param('gameId', gameCtrl.gameByID)
 router.param('enrollmentId', enrollmentCtrl.enrollmentByID)

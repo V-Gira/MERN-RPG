@@ -253,7 +253,7 @@ export default function Game ({match}) {
               <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Publish Game</DialogTitle>
                 <DialogContent>
-                  <Typography variant="body1">Publishing your game will make it live to students for enrollment. </Typography><Typography variant="body1">Make sure all missions are added and ready for publishing.</Typography></DialogContent>
+                  <Typography variant="body1">Publishing your game will make it live to players for enrollment. </Typography><Typography variant="body1">Make sure all missions are added and ready for publishing.</Typography></DialogContent>
                 <DialogActions>
                 <Button onClick={handleClose} color="primary" variant="contained">
                   Cancel
