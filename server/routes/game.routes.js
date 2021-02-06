@@ -10,7 +10,7 @@ router.route('/api/games/published')
 
 router.route('/api/games/by/:userId')
   .post(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.isGm, gameCtrl.create)
-  .get(authCtrl.requireSignin, authCtrl.hasAuthorization, gameCtrl.listByInstructor)
+  .get(authCtrl.requireSignin, authCtrl.hasAuthorization, gameCtrl.listByGameMaster)
 
 router.route('/api/games/photo/:gameId')
   .get(gameCtrl.photo, gameCtrl.defaultPhoto)
@@ -19,12 +19,12 @@ router.route('/api/games/defaultphoto')
   .get(gameCtrl.defaultPhoto)
 
 router.route('/api/games/:gameId/mission/new')
-  .put(authCtrl.requireSignin, gameCtrl.isInstructor, gameCtrl.newMission)
+  .put(authCtrl.requireSignin, gameCtrl.isGameMaster, gameCtrl.newMission)
 
 router.route('/api/games/:gameId')
   .get(gameCtrl.read)
-  .put(authCtrl.requireSignin, gameCtrl.isInstructor, gameCtrl.update)
-  .delete(authCtrl.requireSignin, gameCtrl.isInstructor, gameCtrl.remove)
+  .put(authCtrl.requireSignin, gameCtrl.isGameMaster, gameCtrl.update)
+  .delete(authCtrl.requireSignin, gameCtrl.isGameMaster, gameCtrl.remove)
 
 router.param('gameId', gameCtrl.gameByID)
 router.param('userId', userCtrl.userByID)

@@ -26,7 +26,7 @@ const create = async (req, res) => {
 const enrollmentByID = async (req, res, next, id) => {
   try {
     let enrollment = await Enrollment.findById(id)
-                                    .populate({path: 'game', populate:{ path: 'instructor'}})
+                                    .populate({path: 'game', populate:{ path: 'gameMaster'}})
                                     .populate('player', '_id name')
     if (!enrollment)
       return res.status('400').json({

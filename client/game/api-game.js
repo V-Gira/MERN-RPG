@@ -74,7 +74,7 @@ const create = async (params, credentials, game) => {
     }
   }
 
-  const listByInstructor = async (params, credentials, signal) => {
+  const listByGameMaster = async (params, credentials, signal) => {
     try {
       let response = await fetch('/api/games/by/'+params.userId, {
         method: 'GET',
@@ -127,7 +127,7 @@ const create = async (params, credentials, game) => {
     read,
     update,
     remove,
-    listByInstructor,
+    listByGameMaster,
     newMission,
     listPublished
   }

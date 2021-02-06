@@ -121,7 +121,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Enrollment ({match}) {
   const classes = useStyles()
-  const [enrollment, setEnrollment] = useState({game:{instructor:[]}, missionStatus: []})
+  const [enrollment, setEnrollment] = useState({game:{gameMaster:[]}, missionStatus: []})
   const [values, setValues] = useState({
       error: '',
       drawer: -1
@@ -228,7 +228,7 @@ export default function Enrollment ({match}) {
                 <CardHeader
                   title={enrollment.game.name}
                   subheader={<div>
-                        <Link to={"/user/"+enrollment.game.instructor._id} className={classes.sub}>By {enrollment.game.instructor.name}</Link>
+                        <Link to={"/user/"+enrollment.game.gameMaster._id} className={classes.sub}>By {enrollment.game.gameMaster.name}</Link>
                         <span className={classes.category}>{enrollment.game.category}</span>
                       </div>
                     }
@@ -260,7 +260,7 @@ export default function Enrollment ({match}) {
                 }
                   subheader={<Typography variant="body1" className={classes.subheading}>{enrollment.game.missions && enrollment.game.missions.length} missions</Typography>}
                   action={
-             auth.isAuthenticated().user && auth.isAuthenticated().user._id == enrollment.game.instructor._id &&
+             auth.isAuthenticated().user && auth.isAuthenticated().user._id == enrollment.game.gameMaster._id &&
                 (<span className={classes.action}>
                   
                 </span>)

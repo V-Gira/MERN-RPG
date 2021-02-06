@@ -86,7 +86,7 @@ export default function EditGame ({match}) {
       description: '',
       image:'',
       category:'',
-      instructor:{},
+      gameMaster:{},
       missions: []
     })
   const [values, setValues] = useState({
@@ -171,7 +171,7 @@ export default function EditGame ({match}) {
                     value={game.name} onChange={handleChange('name')}
                   />}
                   subheader={<div>
-                        <Link to={"/user/"+game.instructor._id} className={classes.sub}>By {game.instructor.name}</Link>
+                        <Link to={"/user/"+game.gameMaster._id} className={classes.sub}>By {game.gameMaster.name}</Link>
                         {<TextField
                     margin="dense"
                     label="Category"
@@ -182,7 +182,7 @@ export default function EditGame ({match}) {
                       </div>
                     }
                   action={
-             auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.instructor._id &&
+             auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.gameMaster._id &&
                 (<span className={classes.action}><Button variant="contained" color="secondary" onClick={clickSubmit}>Save</Button>
                     </span>)
             }

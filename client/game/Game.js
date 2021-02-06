@@ -93,7 +93,7 @@ const useStyles = makeStyles(theme => ({
 export default function Game ({match}) {
   const classes = useStyles()
   const [stats, setStats] = useState({})
-  const [game, setGame] = useState({instructor:{}})
+  const [game, setGame] = useState({gameMaster:{}})
   const [values, setValues] = useState({
       redirect: false,
       error: ''
@@ -172,12 +172,12 @@ export default function Game ({match}) {
                 <CardHeader
                   title={game.name}
                   subheader={<div>
-                        <Link to={"/user/"+game.instructor._id} className={classes.sub}>By {game.instructor.name}</Link>
+                        <Link to={"/user/"+game.gameMaster._id} className={classes.sub}>By {game.gameMaster.name}</Link>
                         <span className={classes.category}>{game.category}</span>
                       </div>
                     }
                   action={<>
-             {auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.instructor._id &&
+             {auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.gameMaster._id &&
                 (<span className={classes.action}>
                   <Link to={"/teach/game/edit/" + game._id}>
                     <IconButton aria-label="Edit" color="secondary">
@@ -224,7 +224,7 @@ export default function Game ({match}) {
                 }
                   subheader={<Typography variant="body1" className={classes.subheading}>{game.missions && game.missions.length} missions</Typography>}
                   action={
-             auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.instructor._id && !game.published &&
+             auth.isAuthenticated().user && auth.isAuthenticated().user._id == game.gameMaster._id && !game.published &&
                 (<span className={classes.action}>
                   <NewMission gameId={game._id} addMission={addMission}/>
                 </span>)

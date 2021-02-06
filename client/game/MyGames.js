@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import auth from './../auth/auth-helper'
-import {listByInstructor} from './api-game.js'
+import {listByGameMaster} from './api-game.js'
 import {Redirect, Link} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +52,7 @@ export default function MyGames(){
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
-    listByInstructor({
+    listByGameMaster({
       userId: jwt.user._id
     }, {t: jwt.token}, signal).then((data) => {
       if (data.error) {
