@@ -1,6 +1,6 @@
 const create = async (params, credentials) => {
     try {
-        let response = await fetch('/api/enrollment/new/'+params.gameId, {
+        let response = await fetch('/api/party/new/'+params.gameId, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -16,7 +16,7 @@ const create = async (params, credentials) => {
   
   const listEnrolled = async (credentials, signal) => {
     try {
-      let response = await fetch('/api/enrollment/enrolled', {
+      let response = await fetch('/api/party/enrolled', {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -30,9 +30,9 @@ const create = async (params, credentials) => {
     }
   }
 
-  const enrollmentStats = async (params, credentials, signal) => {
+  const partyStats = async (params, credentials, signal) => {
     try {
-      let response = await fetch('/api/enrollment/stats/'+params.gameId, {
+      let response = await fetch('/api/party/stats/'+params.gameId, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -48,7 +48,7 @@ const create = async (params, credentials) => {
   
   const read = async (params, credentials, signal) => {
     try {
-      let response = await fetch('/api/enrollment/' + params.enrollmentId, {
+      let response = await fetch('/api/party/' + params.partyId, {
         method: 'GET',
         signal: signal,
         headers: {
@@ -63,16 +63,16 @@ const create = async (params, credentials) => {
     }
   }
   
-  const complete = async (params, credentials, enrollment) => {
+  const complete = async (params, credentials, party) => {
     try {
-      let response = await fetch('/api/enrollment/complete/' + params.enrollmentId, {
+      let response = await fetch('/api/party/complete/' + params.partyId, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + credentials.t
         },
-        body: JSON.stringify(enrollment)
+        body: JSON.stringify(party)
       })
       return await response.json()
     } catch(err) {
@@ -82,7 +82,7 @@ const create = async (params, credentials) => {
   
   const remove = async (params, credentials) => {
     try {
-      let response = await fetch('/api/enrollment/' + params.enrollmentId, {
+      let response = await fetch('/api/party/' + params.partyId, {
         method: 'DELETE',
         headers: {
           'Accept': 'application/json',
@@ -102,5 +102,5 @@ const create = async (params, credentials) => {
     complete,
     remove,
     listEnrolled,
-    enrollmentStats
+    partyStats
   }

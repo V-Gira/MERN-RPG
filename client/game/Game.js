@@ -15,7 +15,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import {read, update} from './api-game.js'
-import {enrollmentStats} from './../enrollment/api-enrollment'
+import {partyStats} from './../party/api-party'
 import {Link, Redirect} from 'react-router-dom'
 import auth from './../auth/auth-helper'
 import DeleteGame from './DeleteGame'
@@ -25,7 +25,7 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Enroll from './../enrollment/Enroll'
+import Enroll from './../party/Enroll'
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({
@@ -119,7 +119,7 @@ export default function Game ({match}) {
     const abortController = new AbortController()
     const signal = abortController.signal
 
-    enrollmentStats({gameId: match.params.gameId}, {t:jwt.token}, signal).then((data) => {
+    partyStats({gameId: match.params.gameId}, {t:jwt.token}, signal).then((data) => {
       if (data.error) {
         setValues({...values, error: data.error})
       } else {
@@ -253,7 +253,7 @@ export default function Game ({match}) {
               <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Publish Game</DialogTitle>
                 <DialogContent>
-                  <Typography variant="body1">Publishing your game will make it live to players for enrollment. </Typography><Typography variant="body1">Make sure all missions are added and ready for publishing.</Typography></DialogContent>
+                  <Typography variant="body1">Publishing your game will make it live to players for party. </Typography><Typography variant="body1">Make sure all missions are added and ready for publishing.</Typography></DialogContent>
                 <DialogActions>
                 <Button onClick={handleClose} color="primary" variant="contained">
                   Cancel

@@ -14,9 +14,9 @@ import ListSubheader from '@material-ui/core/ListSubheader'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import {read, complete} from './api-enrollment.js'
+import {read, complete} from './api-party.js'
 import {Link} from 'react-router-dom'
-import auth from './../auth/auth-helper'
+import auth from '../auth/auth-helper'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import Info from '@material-ui/icons/Info'
@@ -119,9 +119,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Enrollment ({match}) {
+export default function Party ({match}) {
   const classes = useStyles()
-  const [enrollment, setEnrollment] = useState({game:{gameMaster:[]}, missionStatus: []})
+  const [party, setParty] = useState({game:{gameMaster:[]}, missionStatus: []})
   const [values, setValues] = useState({
       error: '',
       drawer: -1
@@ -132,18 +132,18 @@ export default function Enrollment ({match}) {
       const abortController = new AbortController()
       const signal = abortController.signal
   
-      read({enrollmentId: match.params.enrollmentId}, {t: jwt.token}, signal).then((data) => {
+      read({partyId: match.params.partyId}, {t: jwt.token}, signal).then((data) => {
         if (data.error) {
           setValues({...values, error: data.error})
         } else {
           totalCompleted(data.missionStatus)
-          setEnrollment(data)
+          setParty(data)
         }
       })
     return function cleanup(){
       abortController.abort()
     }
-  }, [match.params.enrollmentId])
+  }, [match.params.partyId])
   const totalCompleted = (missions) => {
     let count = missions.reduce((total, missionStatus) => {return total + (missionStatus.complete ? 1 : 0)}, 0)
     setTotalComplete(count)
@@ -153,8 +153,8 @@ export default function Enrollment ({match}) {
       setValues({...values, drawer:index})
   }
   const markComplete = () => {
-      if(!enrollment.missionStatus[values.drawer].complete){
-        const missionStatus = enrollment.missionStatus
+      if(!party.missionStatus[values.drawer].complete){
+        const missionStatus = party.missionStatus
         missionStatus[values.drawer].complete = true
         let count = totalCompleted(missionStatus)
 
@@ -167,20 +167,20 @@ export default function Enrollment ({match}) {
         }
 
       complete({
-        enrollmentId: match.params.enrollmentId
+        partyId: match.params.partyId
       }, {
         t: jwt.token
       }, updatedData).then((data) => {
         if (data && data.error) {
           setValues({...values, error: data.error})
         } else {
-          setEnrollment({...enrollment, missionStatus: missionStatus})
+          setParty({...party, missionStatus: missionStatus})
         }
       })
     }
   }
-    const imageUrl = enrollment.game._id
-          ? `/api/games/photo/${enrollment.game._id}?${new Date().getTime()}`
+    const imageUrl = party.game._id
+          ? `/api/games/photo/${party.game._id}?${new Date().getTime()}`
           : '/api/games/defaultphoto'
     return (
         <div className={classes.root}>
@@ -202,14 +202,14 @@ export default function Enrollment ({match}) {
       <ListSubheader component="div" className={classes.subhead}>
           Missions
         </ListSubheader>
-        {enrollment.missionStatus.map((mission, index) => (
+        {party.missionStatus.map((mission, index) => (
           <ListItem button key={index} onClick={selectDrawer(index)} className={values.drawer == index ? classes.selectedDrawer : classes.unselected}>
             <ListItemAvatar>
                         <Avatar className={classes.avatar}>
                         {index+1}
                         </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={enrollment.game.missions[index].title} />
+            <ListItemText primary={party.game.missions[index].title} />
             <ListItemSecondaryAction>
                     { mission.complete ? <CheckCircle className={classes.check}/> : <RadioButtonUncheckedIcon />}
                     </ListItemSecondaryAction>
@@ -219,21 +219,21 @@ export default function Enrollment ({match}) {
       <Divider />
       <List>
           <ListItem>
-        <ListItemText primary={<div className={classes.progress}><span>{totalComplete}</span> out of <span>{enrollment.missionStatus.length}</span> completed</div>} />
+        <ListItemText primary={<div className={classes.progress}><span>{totalComplete}</span> out of <span>{party.missionStatus.length}</span> completed</div>} />
           </ListItem>
       </List>
     </Drawer>
               {values.drawer == - 1 && 
               <Card className={classes.card}>
                 <CardHeader
-                  title={enrollment.game.name}
+                  title={party.game.name}
                   subheader={<div>
-                        <Link to={"/user/"+enrollment.game.gameMaster._id} className={classes.sub}>By {enrollment.game.gameMaster.name}</Link>
-                        <span className={classes.category}>{enrollment.game.category}</span>
+                        <Link to={"/user/"+party.game.gameMaster._id} className={classes.sub}>By {party.game.gameMaster.name}</Link>
+                        <span className={classes.category}>{party.game.category}</span>
                       </div>
                     }
                   action={
-                    totalComplete == enrollment.missionStatus.length &&
+                    totalComplete == party.missionStatus.length &&
                 (<span className={classes.action}>
                   <Button variant="contained" color="secondary">
                     <CheckCircle /> &nbsp; Completed
@@ -245,11 +245,11 @@ export default function Enrollment ({match}) {
                   <CardMedia
                     className={classes.media}
                     image={imageUrl}
-                    title={enrollment.game.name}
+                    title={party.game.name}
                   />
                   <div className={classes.details}>
                     <Typography variant="body1" className={classes.subheading}>
-                        {enrollment.game.description}<br/>
+                        {party.game.description}<br/>
                     </Typography>
                   </div>
                 </div>
@@ -258,16 +258,16 @@ export default function Enrollment ({match}) {
                 <CardHeader
                   title={<Typography variant="h6" className={classes.subheading}>Missions</Typography>
                 }
-                  subheader={<Typography variant="body1" className={classes.subheading}>{enrollment.game.missions && enrollment.game.missions.length} missions</Typography>}
+                  subheader={<Typography variant="body1" className={classes.subheading}>{party.game.missions && party.game.missions.length} missions</Typography>}
                   action={
-             auth.isAuthenticated().user && auth.isAuthenticated().user._id == enrollment.game.gameMaster._id &&
+             auth.isAuthenticated().user && auth.isAuthenticated().user._id == party.game.gameMaster._id &&
                 (<span className={classes.action}>
                   
                 </span>)
             }
                 />
                 <List>
-                {enrollment.game.missions && enrollment.game.missions.map((mission, i) => {
+                {party.game.missions && party.game.missions.map((mission, i) => {
                     return(<span key={i}>
                     <ListItem>
                     <ListItemAvatar>
@@ -287,16 +287,16 @@ export default function Enrollment ({match}) {
                 </div>
             </Card> }
              {values.drawer != -1 && (<>
-             <Typography variant="h5" className={classes.heading}>{enrollment.game.name}</Typography>
+             <Typography variant="h5" className={classes.heading}>{party.game.name}</Typography>
              <Card className={classes.card}>
                 <CardHeader
-                  title={enrollment.game.missions[values.drawer].title}
-                  action={<Button onClick={markComplete} variant={enrollment.missionStatus[values.drawer].complete? 'contained' : 'outlined'} color="secondary">{enrollment.missionStatus[values.drawer].complete? "Completed" : "Mark as complete"}</Button>} />
+                  title={party.game.missions[values.drawer].title}
+                  action={<Button onClick={markComplete} variant={party.missionStatus[values.drawer].complete? 'contained' : 'outlined'} color="secondary">{party.missionStatus[values.drawer].complete? "Completed" : "Mark as complete"}</Button>} />
                   <CardContent> 
-                      <Typography variant="body1" className={classes.para}>{enrollment.game.missions[values.drawer].content}</Typography>
+                      <Typography variant="body1" className={classes.para}>{party.game.missions[values.drawer].content}</Typography>
                   </CardContent>
                   <CardActions>
-                    <a href={enrollment.game.missions[values.drawer].resource_url}><Button variant="contained" color="primary">Resource Link</Button></a>
+                    <a href={party.game.missions[values.drawer].resource_url}><Button variant="contained" color="primary">Resource Link</Button></a>
                 </CardActions>
                 </Card></>)}
         </div>)

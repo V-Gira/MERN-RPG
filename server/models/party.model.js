@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const EnrollmentSchema = new mongoose.Schema({
+const PartySchema = new mongoose.Schema({
   game: {type: mongoose.Schema.ObjectId, ref: 'Game'},
   updated: Date,
   enrolled: {
@@ -14,4 +14,4 @@ const EnrollmentSchema = new mongoose.Schema({
   completed: Date
 })
 
-export default mongoose.model('Enrollment', EnrollmentSchema)
+export default mongoose.model('Party', PartySchema)

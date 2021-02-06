@@ -1,17 +1,17 @@
-import Enrollment from '../models/enrollment.model'
-import errorHandler from './../helpers/dbErrorHandler'
+import Party from '../models/party.model'
+import errorHandler from '../helpers/dbErrorHandler'
 
 const create = async (req, res) => {
-  let newEnrollment = {
+  let newParty = {
     game: req.game,
     player: req.auth,
   }
-  newEnrollment.missionStatus = req.game.missions.map((mission)=>{
+  newParty.missionStatus = req.game.missions.map((mission)=>{
     return {mission: mission, complete:false}
   })
-  const enrollment = new Enrollment(newEnrollment)
+  const party = new Party(newParty)
   try {
-    let result = await enrollment.save()
+    let result = await party.save()
     return res.status(200).json(result)
   } catch (err) {
     return res.status(400).json({
@@ -21,28 +21,28 @@ const create = async (req, res) => {
 }
 
 /**
- * Load enrollment and append to req.
+ * Load party and append to req.
  */
-const enrollmentByID = async (req, res, next, id) => {
+const partyByID = async (req, res, next, id) => {
   try {
-    let enrollment = await Enrollment.findById(id)
+    let party = await Party.findById(id)
                                     .populate({path: 'game', populate:{ path: 'gameMaster'}})
                                     .populate('player', '_id name')
-    if (!enrollment)
+    if (!party)
       return res.status('400').json({
-        error: "Enrollment not found"
+        error: "Party not found"
       })
-    req.enrollment = enrollment
+    req.party = party
     next()
   } catch (err) {
     return res.status('400').json({
-      error: "Could not retrieve enrollment"
+      error: "Could not retrieve party"
     })
   }
 }
 
 const read = (req, res) => {
-  return res.json(req.enrollment)
+  return res.json(req.party)
 }
 
 const complete = async (req, res) => {
@@ -53,8 +53,8 @@ const complete = async (req, res) => {
     updatedData.completed = req.body.gameCompleted
 
     try {
-      let enrollment = await Enrollment.updateOne({'missionStatus._id':req.body.missionStatusId}, {'$set': updatedData})
-      res.json(enrollment)
+      let party = await Party.updateOne({'missionStatus._id':req.body.missionStatusId}, {'$set': updatedData})
+      res.json(party)
     } catch (err) {
       return res.status(400).json({
         error: errorHandler.getErrorMessage(err)
@@ -64,9 +64,9 @@ const complete = async (req, res) => {
 
 const remove = async (req, res) => {
   try {
-    let enrollment = req.enrollment
-    let deletedEnrollment = await enrollment.remove()
-    res.json(deletedEnrollment)
+    let party = req.party
+    let deletedParty = await party.remove()
+    res.json(deletedParty)
   } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err)
@@ -75,7 +75,7 @@ const remove = async (req, res) => {
 }
 
 const isPlayer = (req, res, next) => {
-  const isPlayer = req.auth && req.auth._id == req.enrollment.player._id
+  const isPlayer = req.auth && req.auth._id == req.party.player._id
   if (!isPlayer) {
     return res.status('403').json({
       error: "User is not enrolled"
@@ -86,8 +86,8 @@ const isPlayer = (req, res, next) => {
 
 const listEnrolled = async (req, res) => {
   try {
-    let enrollments = await Enrollment.find({player: req.auth._id}).sort({'completed': 1}).populate('game', '_id name category')
-    res.json(enrollments)
+    let parties = await Party.find({player: req.auth._id}).sort({'completed': 1}).populate('game', '_id name category')
+    res.json(parties)
   } catch (err) {
     console.log(err)
     return res.status(400).json({
@@ -96,13 +96,13 @@ const listEnrolled = async (req, res) => {
   }
 }
 
-const findEnrollment = async (req, res, next) => {
+const findParty = async (req, res, next) => {
   try {
-    let enrollments = await Enrollment.find({game:req.game._id, player: req.auth._id})
-    if(enrollments.length == 0){
+    let parties = await Party.find({game:req.game._id, player: req.auth._id})
+    if(parties.length == 0){
       next()
     }else{
-      res.json(enrollments[0])
+      res.json(parties[0])
     }
   } catch (err) {
     return res.status(400).json({
@@ -111,11 +111,11 @@ const findEnrollment = async (req, res, next) => {
   }
 }
 
-const enrollmentStats = async (req, res) => {
+const partyStats = async (req, res) => {
   try {
     let stats = {}
-    stats.totalEnrolled = await Enrollment.find({game:req.game._id}).countDocuments()
-    stats.totalCompleted = await Enrollment.find({game:req.game._id}).exists('completed', true).countDocuments()
+    stats.totalEnrolled = await Party.find({game:req.game._id}).countDocuments()
+    stats.totalCompleted = await Party.find({game:req.game._id}).exists('completed', true).countDocuments()
       res.json(stats)
   } catch (err) {
     return res.status(400).json({
@@ -126,12 +126,12 @@ const enrollmentStats = async (req, res) => {
 
 export default {
   create,
-  enrollmentByID,
+  partyByID,
   read,
   remove,
   complete,
   isPlayer,
   listEnrolled,
-  findEnrollment,
-  enrollmentStats
+  findParty,
+  partyStats
 }

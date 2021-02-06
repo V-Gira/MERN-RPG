@@ -6,7 +6,7 @@ import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import {Link} from 'react-router-dom'
 import auth from './../auth/auth-helper'
-import Enroll from './../enrollment/Enroll'
+import Enroll from './../party/Enroll'
 
 const useStyles = makeStyles(theme => ({
   title: {

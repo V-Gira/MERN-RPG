@@ -3,11 +3,11 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import {listPublished} from './../game/api-game'
-import {listEnrolled, listCompleted} from './../enrollment/api-enrollment'
+import {listEnrolled, listCompleted} from './../party/api-party'
 import Typography from '@material-ui/core/Typography'
 import auth from './../auth/auth-helper'
 import Games from './../game/Games'
-import Enrollments from '../enrollment/Enrollments'
+import Parties from '../party/Parties'
 
 
 const useStyles = makeStyles(theme => ({
@@ -104,7 +104,7 @@ export default function Home(){
         <Typography variant="h6" component="h2" className={classes.enrolledTitle}>
             Games you are enrolled in
         </Typography>
-        {enrolled.length != 0 ? (<Enrollments enrollments={enrolled}/>)
+        {enrolled.length != 0 ? (<Parties parties={enrolled}/>)
                              : (<Typography variant="body1" className={classes.noTitle}>No games.</Typography>)
         }
       </Card>
