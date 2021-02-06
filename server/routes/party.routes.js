@@ -5,8 +5,8 @@ import authCtrl from '../controllers/auth.controller'
 
 const router = express.Router()
 
-router.route('/api/party/enrolled')
-  .get(authCtrl.requireSignin, partyCtrl.listEnrolled)
+router.route('/api/party/joined')
+  .get(authCtrl.requireSignin, partyCtrl.listJoined)
 
 router.route('/api/party/new/:gameId')
   .post(authCtrl.requireSignin, partyCtrl.findParty, partyCtrl.create)  

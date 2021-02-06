@@ -6,7 +6,7 @@ import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import {Link} from 'react-router-dom'
 import auth from './../auth/auth-helper'
-import Enroll from './../party/Enroll'
+import Join from './../party/Join'
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 export default function Games(props){
   const classes = useStyles()
   const findCommon = (game) => {
-    return !props.common.find((enrolled)=>{return enrolled.game._id == game._id})
+    return !props.common.find((joined)=>{return joined.game._id == game._id})
   }
     return (
         <GridList cellHeight={220} className={classes.gridList} cols={2}>
@@ -61,7 +61,7 @@ export default function Games(props){
                   subtitle={<span>{game.category}</span>}
                   actionIcon={
                     <div className={classes.action}>
-                    {auth.isAuthenticated() ? <Enroll gameId={game._id}/> : <Link to="/signin">Sign in to Enroll</Link>}
+                    {auth.isAuthenticated() ? <Join gameId={game._id}/> : <Link to="/signin">Sign in to Join</Link>}
                     </div>
                   }
                 />

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import {makeStyles} from '@material-ui/core/styles'
 import {create} from './api-party'
-import auth from './../auth/auth-helper'
+import auth from '../auth/auth-helper'
 import {Redirect} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Enroll(props) {
+export default function Join(props) {
   const classes = useStyles()
   const [values, setValues] = useState({
     partyId: '',
@@ -20,7 +20,7 @@ export default function Enroll(props) {
     redirect: false
   })
   const jwt = auth.isAuthenticated()
-  const clickEnroll = () => {
+  const clickJoin = () => {
     create({
       gameId: props.gameId
     }, {
@@ -39,10 +39,10 @@ export default function Enroll(props) {
     }
 
   return (
-      <Button variant="contained" color="secondary" onClick={clickEnroll}> Enroll </Button>
+      <Button variant="contained" color="secondary" onClick={clickJoin}> Join </Button>
   )
 }
 
-Enroll.propTypes = {
+Join.propTypes = {
   gameId: PropTypes.string.isRequired
 }

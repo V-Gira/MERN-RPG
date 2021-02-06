@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import Divider from '@material-ui/core/Divider'
 import {listPublished} from './../game/api-game'
-import {listEnrolled, listCompleted} from './../party/api-party'
+import {listJoined, listCompleted} from './../party/api-party'
 import Typography from '@material-ui/core/Typography'
 import auth from './../auth/auth-helper'
 import Games from './../game/Games'
@@ -44,14 +44,14 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'rgba(0, 0, 0, 0.72)',
     textAlign: 'left'
   },
-  enrolledTitle: {
+  joinedTitle: {
     color:'#efefef',
     marginBottom: 5
   },
   action:{
     margin: '0 10px'
   },
-  enrolledCard: {
+  joinedCard: {
     backgroundColor: '#616161',
   },
   divider: {
@@ -69,15 +69,15 @@ export default function Home(){
   const classes = useStyles()
   const jwt = auth.isAuthenticated()
   const [games, setGames] = useState([])
-  const [enrolled, setEnrolled] = useState([])
+  const [joined, setJoined] = useState([])
   useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
-    listEnrolled({t: jwt.token}, signal).then((data) => {
+    listJoined({t: jwt.token}, signal).then((data) => {
       if (data.error) {
         console.log(data.error)
       } else {
-        setEnrolled(data)
+        setJoined(data)
       }
     })
     return function cleanup(){
@@ -100,11 +100,11 @@ export default function Home(){
   }, [])
     return (<div className={classes.extraTop}>
       {auth.isAuthenticated().user && (
-      <Card className={`${classes.card} ${classes.enrolledCard}`}>
-        <Typography variant="h6" component="h2" className={classes.enrolledTitle}>
-            Games you are enrolled in
+      <Card className={`${classes.card} ${classes.joinedCard}`}>
+        <Typography variant="h6" component="h2" className={classes.joinedTitle}>
+            Games you are joined in
         </Typography>
-        {enrolled.length != 0 ? (<Parties parties={enrolled}/>)
+        {joined.length != 0 ? (<Parties parties={joined}/>)
                              : (<Typography variant="body1" className={classes.noTitle}>No games.</Typography>)
         }
       </Card>
@@ -113,7 +113,7 @@ export default function Home(){
         <Typography variant="h5" component="h2">
             All Games
         </Typography>
-        {(games.length != 0 && games.length != enrolled.length) ? (<Games games={games} common={enrolled}/>) 
+        {(games.length != 0 && games.length != joined.length) ? (<Games games={games} common={joined}/>) 
                              : (<Typography variant="body1" className={classes.noTitle}>No new games.</Typography>)
         }
       </Card>

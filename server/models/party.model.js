@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const PartySchema = new mongoose.Schema({
   game: {type: mongoose.Schema.ObjectId, ref: 'Game'},
   updated: Date,
-  enrolled: {
+  joined: {
     type: Date,
     default: Date.now
   },

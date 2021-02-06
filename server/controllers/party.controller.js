@@ -78,13 +78,13 @@ const isPlayer = (req, res, next) => {
   const isPlayer = req.auth && req.auth._id == req.party.player._id
   if (!isPlayer) {
     return res.status('403').json({
-      error: "User is not enrolled"
+      error: "User is not joined"
     })
   }
   next()
 }
 
-const listEnrolled = async (req, res) => {
+const listJoined = async (req, res) => {
   try {
     let parties = await Party.find({player: req.auth._id}).sort({'completed': 1}).populate('game', '_id name category')
     res.json(parties)
@@ -114,7 +114,7 @@ const findParty = async (req, res, next) => {
 const partyStats = async (req, res) => {
   try {
     let stats = {}
-    stats.totalEnrolled = await Party.find({game:req.game._id}).countDocuments()
+    stats.totalJoined = await Party.find({game:req.game._id}).countDocuments()
     stats.totalCompleted = await Party.find({game:req.game._id}).exists('completed', true).countDocuments()
       res.json(stats)
   } catch (err) {
@@ -131,7 +131,7 @@ export default {
   remove,
   complete,
   isPlayer,
-  listEnrolled,
+  listJoined,
   findParty,
   partyStats
 }

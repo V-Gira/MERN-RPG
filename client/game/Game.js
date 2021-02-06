@@ -25,7 +25,7 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import Enroll from './../party/Enroll'
+import Join from './../party/Join'
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({
@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme => ({
       color: '#b6ab9a'
     }
   },
-  enroll:{
+  join:{
     float: 'right'
   }
 }))
@@ -193,7 +193,7 @@ export default function Game ({match}) {
                 </span>)
              }
                 {game.published && (<div>
-                  <span className={classes.statSpan}><PeopleIcon /> {stats.totalEnrolled} enrolled </span>
+                  <span className={classes.statSpan}><PeopleIcon /> {stats.totalJoined} joined </span>
                   <span className={classes.statSpan}><CompletedIcon/> {stats.totalCompleted} completed </span>
                   </div>
                   )}
@@ -212,7 +212,7 @@ export default function Game ({match}) {
                         {game.description}<br/>
                     </Typography>
                     
-              {game.published && <div className={classes.enroll}><Enroll gameId={game._id}/></div>} 
+              {game.published && <div className={classes.join}><Join gameId={game._id}/></div>} 
                     
                     
                   </div>

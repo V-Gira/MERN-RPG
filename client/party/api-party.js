@@ -14,9 +14,9 @@ const create = async (params, credentials) => {
     }
   }
   
-  const listEnrolled = async (credentials, signal) => {
+  const listJoined = async (credentials, signal) => {
     try {
-      let response = await fetch('/api/party/enrolled', {
+      let response = await fetch('/api/party/joined', {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -101,6 +101,6 @@ const create = async (params, credentials) => {
     read,
     complete,
     remove,
-    listEnrolled,
+    listJoined,
     partyStats
   }
