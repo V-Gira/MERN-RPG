@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography'
 import auth from './../auth/auth-helper'
 import Games from './../game/Games'
 import Parties from '../party/Parties'
+import Users from '../user/Users'
 
 
 const useStyles = makeStyles(theme => ({
@@ -117,6 +118,7 @@ export default function Home(){
                              : (<Typography variant="body1" className={classes.noTitle}>No new games.</Typography>)
         }
       </Card>
+      <Users />
     </div>
     )
 }
