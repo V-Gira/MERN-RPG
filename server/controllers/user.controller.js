@@ -20,10 +20,13 @@ const create = async (req, res) => {
  * Load user and append to req.
  */
 const userByID = async (req, res, next, id) => {
+  console.log(req.body.followId, id);
+
   try {
     let user = await User.findById(id)
       .populate('following', '_id name')
-      .populate('followers', '_id name');
+      .populate('followers', '_id name')
+      .exec();
     if (!user)
       return res.status('400').json({
         error: 'User not found',
@@ -95,6 +98,7 @@ const isGm = (req, res, next) => {
 };
 
 const addFollowing = async (req, res, next) => {
+  console.log(res);
   try {
     await User.findByIdAndUpdate(req.body.userId, {
       $push: { following: req.body.followId },
