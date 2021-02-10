@@ -17,6 +17,7 @@ import auth from './../auth/auth-helper';
 import { read } from './api-user.js';
 import { Redirect, Link } from 'react-router-dom';
 import FollowProfileButton from './../user/FollowProfileButton';
+import ProfileTabs from './../user/ProfileTabs';
 
 const useStyles = makeStyles((theme) => ({
   root: theme.mixins.gutters({
@@ -131,6 +132,7 @@ export default function Profile({ match }) {
           />
         </ListItem>
       </List>
+      <ProfileTabs user={values.user} />
     </Paper>
   );
 }

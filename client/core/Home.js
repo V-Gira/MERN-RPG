@@ -133,7 +133,7 @@ export default function Home() {
           </Typography>
         )}
       </Card>
-      <FindPeople />
+      <Users />
     </div>
   );
 }
