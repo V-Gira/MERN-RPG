@@ -20,8 +20,6 @@ const create = async (req, res) => {
  * Load user and append to req.
  */
 const userByID = async (req, res, next, id) => {
-  console.log(req.body.followId, id);
-
   try {
     let user = await User.findById(id)
       .populate('following', '_id name')
