@@ -1,29 +1,29 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const CharacterSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    required: 'Name is required'
+    required: 'Name is required',
   },
   image: {
     data: Buffer,
-    contentType: String
+    contentType: String,
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
   },
   system: {
     type: String,
-    required: 'System is required'
+    required: 'System is required',
   },
   updated: Date,
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  player: {type: mongoose.Schema.ObjectId, ref: 'User'}
-})
+  player: { type: mongoose.Schema.ObjectId, ref: 'User' },
+});
 
-export default mongoose.model('Character', GameSchema)
+export default mongoose.model('Character', CharacterSchema);
